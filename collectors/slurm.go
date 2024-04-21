@@ -5,7 +5,7 @@ import (
 	"strconv"
 
 	ps "github.com/mitchellh/go-ps"
-	cg "github.com/phpHavok/cgroups_exporter/cgroups"
+	cg "github.com/hgc123123/jobinfo/cgroups"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )

@@ -4,7 +4,7 @@ import (
 	"flag"
 	"net/http"
 
-	"github.com/phpHavok/cgroups_exporter/collectors"
+	"github.com/hgc123123/jobinfo/collectors"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 	log "github.com/sirupsen/logrus"
