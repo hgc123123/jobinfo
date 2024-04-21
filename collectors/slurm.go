@@ -102,6 +102,11 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				for cpuID, cpuUsage := range usagePerCPU {
 					ch <- prometheus.MustNewConstMetric(collector.cpuacctUsagePerCPUMetric,
 						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))
+						/*
+						2 1.4992064e+07 4247817 228356 batch 0 0
+						2 5.356123e+06 4247817 228356 batch 0 1
+						2 1.6845861e+07 4247817 228356 batch 0 2
+						*/
 				}
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()
