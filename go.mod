@@ -1,4 +1,4 @@
-module github.com/phpHavok/cgroups_exporter
+module github.com/hgc123123/jobinfo
 
 go 1.16
 
