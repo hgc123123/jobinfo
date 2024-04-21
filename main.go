@@ -28,9 +28,7 @@ func main() {
 	log.Printf("serving cgroups from hierarchy root %s", *cgroupsRootPathPtr)
 	// Create and register our cgroups collector
 	var cgroupsCollector prometheus.Collector
-	if *methodPtr == "file" {
-		cgroupsCollector = collectors.NewCgroupsFileCollector(*filePtr, *cgroupsRootPathPtr)
-	} else if *methodPtr == "slurm" {
+	if *methodPtr == "slurm" {
 		cgroupsCollector = collectors.NewCgroupsSlurmCollector(*cgroupsRootPathPtr)
 	} else {
 		log.Fatalf("invalid method %s", *methodPtr)
