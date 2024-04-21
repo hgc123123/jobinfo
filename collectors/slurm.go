@@ -3,6 +3,7 @@ package collectors
 import (
 	"regexp"
 	"strconv"
+	"fmt"
 
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
@@ -47,6 +48,7 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatalf("unable to read process table: %v", err)
 	}
+	fmt.Println("Proc Hu........, %v",procs)
 	// Filter processes by those running slurmstepd
 	var slurmstepdIds []int
 	for _, proc := range procs {
