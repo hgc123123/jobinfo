@@ -39,7 +39,8 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
 	// The content of collector.cpuacctUsagePerCPUMetric:
-	//Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", help: "Per-nanosecond usage of each CPU in a cgroup", constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]}
+	/*Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", help: "Per-nanosecond usage of each CPU in a cgroup", 
+	constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]} */
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 }
@@ -56,6 +57,13 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	for _, proc := range procs {
 		if proc.Executable() == "slurmstepd" {
 			slurmstepdIds = append(slurmstepdIds, proc.Pid())
+			//The content of proc.Pid()
+			/* 3218043
+                           [root@compute133 job_228338]# ps axu | grep 3218043
+			   gh       3218043  0.0  0.0  13000  3404 ?        S    15:37   0:00 /bin/bash /var/spool/slurmd/job228356/slurm_script
+			   root     3223440  0.0  0.0  12144  1092 pts/2    S+   16:04   0:00 grep --color=auto 3218043[root@compute133 job_228338]# ps axu | grep 3218043
+			   root     3223440  0.0  0.0  12144  1092 pts/2    S+   16:04   0:00 grep --color=auto 3218043
+			*/
 		}
 	}
 	// Filter processes by children of slurmstepd processes
