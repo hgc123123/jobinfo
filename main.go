@@ -19,7 +19,6 @@ func main() {
 	helpPtr := flag.Bool("help", false, "print usage")
 	cgroupsRootPathPtr := flag.String("cgroups-root", "/sys/fs/cgroup", "path to the root of the cgroupsv1 hierarchy")
 	methodPtr := flag.String("method", "slurm", "one of: file, slurm")
-	filePtr := flag.String("file", "/proc/1/cgroup", "path to the cgroup specification file to use if method is file, ignored otherwise")
 	flag.Parse()
 	if *helpPtr {
 		flag.Usage()
