@@ -38,6 +38,8 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
+	// The content of collector.cpuacctUsagePerCPUMetric:
+	//Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", help: "Per-nanosecond usage of each CPU in a cgroup", constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]}
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 }
