@@ -1,20 +1,15 @@
 package script
 
 import (
-	"strconv"
-	"strings"
-	"fmt"
-
-	log "github.com/sirupsen/logrus"
+	"io/ioutil"
 )
 
-type script string
 
 // GetUsageInBytes returns the current memory in use by the cgroup in bytes
-func (c script) GetContentOfScript() (int, error) {
-	data, err := readFile(string(c))
-	if err != nil {
-		return 0, err
+func GetContentOfScript(name string) (string,error) {
+	data,err := ioutil.ReadFile(name)
+	if err != nil{
+		return "0",err
 	}
-	fmt.Println(string(data))
+	return string(data),nil
 }
