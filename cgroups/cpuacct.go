@@ -3,6 +3,7 @@ package cgroups
 import (
 	"strconv"
 	"strings"
+	"fmt"
 
 	log "github.com/sirupsen/logrus"
 )
@@ -14,10 +15,7 @@ type cpuacct string
 func (c cpuacct) GetUsagePerCPU() ([]int, error) {
 	var usage []int
 	data, err := readFile(string(c), "cpuacct.usage_percpu")
-	/*
-	The content of "string(c)" is:
-	/sys/fs/cgroup/cpuacct/slurm/uid_42xxxx/job_242184/step_0/task_0
-	*/
+        fmt.Println("data, err := readFile(string(c), cpuacct.usage_percpu)......%v",string(c))
 	if err != nil {
 		return usage, err
 	}

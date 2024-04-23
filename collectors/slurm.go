@@ -3,10 +3,12 @@ package collectors
 import (
 	"regexp"
 	"strconv"
-	"fmt"
+        "fmt"
+        "strings"
 
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
+	"github.com/hgc123123/jobinfo/script"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
@@ -38,9 +40,7 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
-	// The content of collector.cpuacctUsagePerCPUMetric:
-	/*Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", help: "Per-nanosecond usage of each CPU in a cgroup", 
-	constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]} */
+        //fmt.Println("Describe Hu ...............%v",collector.cpuacctUsagePerCPUMetric)
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 }
@@ -51,36 +51,33 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatalf("unable to read process table: %v", err)
 	}
-	fmt.Println("Proc Hu........, %v",procs)
+	//fmt.Println("Proc Hu........, %v",procs)
 	// Filter processes by those running slurmstepd
 	var slurmstepdIds []int
 	for _, proc := range procs {
 		if proc.Executable() == "slurmstepd" {
+                        //fmt.Println("proc.Pid()...................................., %v",proc.Pid())
 			slurmstepdIds = append(slurmstepdIds, proc.Pid())
-			//The content of proc.Pid()
-			/* 3218043
-                           [root@compute133 job_228338]# ps axu | grep 3218043
-			   gh       3218043  0.0  0.0  13000  3404 ?        S    15:37   0:00 /bin/bash /var/spool/slurmd/job228356/slurm_script
-			   root     3223440  0.0  0.0  12144  1092 pts/2    S+   16:04   0:00 grep --color=auto 3218043
-			*/
 		}
 	}
 	// Filter processes by children of slurmstepd processes
 	for _, ssid := range slurmstepdIds {
 		for _, proc := range procs {
 			if proc.PPid() == ssid {
+                                //fmt.Println("Children of slurmsteped process........, %v",proc.Executable())
+                                //fmt.Println("Children of slurmsteped process........, %v",proc)
 				cgroups, err := cg.LoadProcessCgroups(proc.Pid(), collector.cgroupsRootPath)
-				/*
-				The content of "proc.Pid()" is:
-				3842837
-				The content of "collector.cgroupsRootPath" is:
-				/sys/fs/cgroup
-				*/
+				fmt.Println("Children of slurmsteped process........, %v",proc.Pid())
+				fmt.Println("Children of slurmsteped process........, %v",collector.cgroupsRootPath)
 				if err != nil {
 					log.Fatalf("unable to read cgroups file: %v", err)
 				}
 				slurmRegex := regexp.MustCompile(`/slurm(?:/uid_([^/]+))?(?:/job_([^/]+))?(?:/step_([^/]+))?(?:/task_([^/]+))?`)
 				matches := slurmRegex.FindStringSubmatch(string(cgroups.Cpuacct))
+				exec_command := strings.Split(strings.Split(matches[0],"/")[3],"_")[1]
+				final_command := "/var/spool/slurmd/job"+exec_command+"/slurm_script"
+				//fmt.Println("Exec Command Path:",final_command)
+				fmt.Println("..........",final_command.GetContentOfScript())
 				var (
 					user_id string
 					job_id  string
@@ -101,21 +98,14 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 				// cpuacctUsagePerCPUMetric
 				usagePerCPU, err := cgroups.Cpuacct.GetUsagePerCPU()
-				/*
-				The content of "cgroups.Cpuacct" is:
-				/sys/fs/cgroup/cpuacct/slurm/uid_42xxx17/job_242184/step_0/task_0
-				*/
+                                //fmt.Println("usagePerCPU, err := cgroups.Cpuacct.GetUsagePerCPU()......%v",cgroups.Cpuacct)
 				if err != nil {
 					log.Fatalf("unable to read cpuacct usage per cpu: %v", err)
 				}
 				for cpuID, cpuUsage := range usagePerCPU {
 					ch <- prometheus.MustNewConstMetric(collector.cpuacctUsagePerCPUMetric,
-						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))
-						/*
-						2 1.4992064e+07 4247817 228356 batch 0 0
-						2 5.356123e+06 4247817 228356 batch 0 1
-						2 1.6845861e+07 4247817 228356 batch 0 2
-						*/
+						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))                       
+                                        //fmt.Println("useragePerCPU......%v",prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))
 				}
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()
