@@ -77,7 +77,7 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				exec_command := strings.Split(strings.Split(matches[0],"/")[3],"_")[1]
 				final_command := "/var/spool/slurmd/job"+exec_command+"/slurm_script"
 				//fmt.Println("Exec Command Path:",final_command)
-				fmt.Println("..........",final_command.GetContentOfScript())
+				fmt.Println("..........",GetContentOfScript(final_command))
 				var (
 					user_id string
 					job_id  string
