@@ -95,6 +95,10 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 				// cpuacctUsagePerCPUMetric
 				usagePerCPU, err := cgroups.Cpuacct.GetUsagePerCPU()
+				/*
+				The content of "cgroups.Cpuacct" is:
+				/sys/fs/cgroup/cpuacct/slurm/uid_42xxx17/job_242184/step_0/task_0
+				*/
 				if err != nil {
 					log.Fatalf("unable to read cpuacct usage per cpu: %v", err)
 				}
