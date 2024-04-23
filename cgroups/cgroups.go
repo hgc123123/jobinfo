@@ -65,6 +65,13 @@ func LoadCgroups(specPath string, cgroupsRootPath string) (Cgroups, error) {
 			switch subsystem {
 			case "cpuset":
 				cgroups.Cpuset = cpuset(cgroupAbsolutePath)
+				/*
+				    The content of "cgroupAbsolutePath" is:
+				    /sys/fs/cgroup/cpuset/slurm/uid_4xxxx17/job_24xxx17/step_0
+
+				    The content of "cgroups.Cpuset" is:
+				    /sys/fs/cgroup/cpuset/slurm/uid_4xxxx17/job_24xxx17/step_0
+				*/
 			case "cpuacct":
 				cgroups.Cpuacct = cpuacct(cgroupAbsolutePath)
 			case "memory":
