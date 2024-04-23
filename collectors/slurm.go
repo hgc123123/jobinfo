@@ -70,6 +70,12 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 		for _, proc := range procs {
 			if proc.PPid() == ssid {
 				cgroups, err := cg.LoadProcessCgroups(proc.Pid(), collector.cgroupsRootPath)
+				/*
+				The content of "proc.Pid()" is:
+				3842837
+				The content of "collector.cgroupsRootPath" is:
+				/sys/fs/cgroup
+				*/
 				if err != nil {
 					log.Fatalf("unable to read cgroups file: %v", err)
 				}
