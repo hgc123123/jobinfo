@@ -62,8 +62,6 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 		for _, proc := range procs {
 			if proc.PPid() == ssid {
 				cgroups, err := cg.LoadProcessCgroups(proc.Pid(), collector.cgroupsRootPath)
-				fmt.Println("Children of slurmsteped process........, %v",proc.Pid())
-				fmt.Println("Children of slurmsteped process........, %v",collector.cgroupsRootPath)
 				if err != nil {
 					log.Fatalf("unable to read cgroups file: %v", err)
 				}
