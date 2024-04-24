@@ -40,7 +40,6 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
-        //fmt.Println("Describe Hu ...............%v",collector.cpuacctUsagePerCPUMetric)
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 }
@@ -51,12 +50,10 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatalf("unable to read process table: %v", err)
 	}
-	//fmt.Println("Proc Hu........, %v",procs)
 	// Filter processes by those running slurmstepd
 	var slurmstepdIds []int
 	for _, proc := range procs {
 		if proc.Executable() == "slurmstepd" {
-                        //fmt.Println("proc.Pid()...................................., %v",proc.Pid())
 			slurmstepdIds = append(slurmstepdIds, proc.Pid())
 		}
 	}
@@ -64,8 +61,6 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	for _, ssid := range slurmstepdIds {
 		for _, proc := range procs {
 			if proc.PPid() == ssid {
-                                //fmt.Println("Children of slurmsteped process........, %v",proc.Executable())
-                                //fmt.Println("Children of slurmsteped process........, %v",proc)
 				cgroups, err := cg.LoadProcessCgroups(proc.Pid(), collector.cgroupsRootPath)
 				fmt.Println("Children of slurmsteped process........, %v",proc.Pid())
 				fmt.Println("Children of slurmsteped process........, %v",collector.cgroupsRootPath)
@@ -76,7 +71,6 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				matches := slurmRegex.FindStringSubmatch(string(cgroups.Cpuacct))
 				exec_command := strings.Split(strings.Split(matches[0],"/")[3],"_")[1]
 				final_command := "/var/spool/slurmd/job"+exec_command+"/slurm_script"
-				//fmt.Println("Exec Command Path:",final_command)
 				command_exec_content,err := script.GetContentOfScript(final_command)
 				if err != nil{
 					log.Fatalf("unable to read cpuacct usage per cpu: %v", err)
@@ -102,14 +96,12 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 				// cpuacctUsagePerCPUMetric
 				usagePerCPU, err := cgroups.Cpuacct.GetUsagePerCPU()
-                                //fmt.Println("usagePerCPU, err := cgroups.Cpuacct.GetUsagePerCPU()......%v",cgroups.Cpuacct)
 				if err != nil {
 					log.Fatalf("unable to read cpuacct usage per cpu: %v", err)
 				}
 				for cpuID, cpuUsage := range usagePerCPU {
 					ch <- prometheus.MustNewConstMetric(collector.cpuacctUsagePerCPUMetric,
 						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))                       
-                                        //fmt.Println("useragePerCPU......%v",prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))
 				}
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()

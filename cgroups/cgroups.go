@@ -53,7 +53,6 @@ func LoadCgroups(specPath string, cgroupsRootPath string) (Cgroups, error) {
 	// Structure the CSV data into a map
 	for _, csvLine := range csvLines {
 		subsystems := strings.Split(csvLine[procCgroupIdxSubsystems], ",")
-                //fmt.Println("Hu subsystems: ........%v",subsystems)
 		for _, subsystem := range subsystems {
 			// Empty subsystem names are possible for some reason, so skip over those
 			if len(subsystem) < 1 {
@@ -61,18 +60,14 @@ func LoadCgroups(specPath string, cgroupsRootPath string) (Cgroups, error) {
 				continue
 			}
 			cgroupAbsolutePath := filepath.Join(cgroupsRootPath, strings.TrimPrefix(subsystem, "name="), csvLine[procCgroupIdxPath])
-                        //fmt.Println("Hu 3 ..............:",cgroupAbsolutePath)
 			if _, err := os.Stat(cgroupAbsolutePath); os.IsNotExist(err) {
 				return cgroups, fmt.Errorf("cgroup path doesn't exist: %s", cgroupAbsolutePath)
 			}
 			switch subsystem {
 			case "cpuset":
 				cgroups.Cpuset = cpuset(cgroupAbsolutePath)
-                                //fmt.Println("cgroupAbsolutePath........%v",cgroupAbsolutePath)
-                                //fmt.Println("cgroups.Cpuset........%v",cgroups.Cpuset)
 			case "cpuacct":
 				cgroups.Cpuacct = cpuacct(cgroupAbsolutePath)
-                                //fmt.Println("cgroups.cpuacct.......%v",cgroups.Cpuacct)
 			case "memory":
 				cgroups.Memory = memory(cgroupAbsolutePath)
 			default:
