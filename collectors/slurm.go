@@ -3,12 +3,10 @@ package collectors
 import (
 	"regexp"
 	"strconv"
-        "fmt"
-        "strings"
+	"fmt"
 
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
-	"github.com/hgc123123/jobinfo/script"
 	"github.com/prometheus/client_golang/prometheus"
 	log "github.com/sirupsen/logrus"
 )
@@ -40,6 +38,11 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
+	/*
+	Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", \
+		help: "Per-nanosecond usage of each CPU in a cgroup", \
+		constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]}
+	*/
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 }
@@ -50,7 +53,6 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 	if err != nil {
 		log.Fatalf("unable to read process table: %v", err)
 	}
-	// Filter processes by those running slurmstepd
 	var slurmstepdIds []int
 	for _, proc := range procs {
 		if proc.Executable() == "slurmstepd" {
@@ -67,13 +69,15 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 				slurmRegex := regexp.MustCompile(`/slurm(?:/uid_([^/]+))?(?:/job_([^/]+))?(?:/step_([^/]+))?(?:/task_([^/]+))?`)
 				matches := slurmRegex.FindStringSubmatch(string(cgroups.Cpuacct))
+				/*
 				exec_command := strings.Split(strings.Split(matches[0],"/")[3],"_")[1]
 				final_command := "/var/spool/slurmd/job"+exec_command+"/slurm_script"
 				command_exec_content,err := script.GetContentOfScript(final_command)
+				collector.contentOfBatchScript=command_exec_content
+				*/
 				if err != nil{
 					log.Fatalf("unable to read cpuacct usage per cpu: %v", err)
 				}
-				fmt.Println("xxxxxxxxxx.............",command_exec_content)
 				var (
 					user_id string
 					job_id  string
@@ -99,7 +103,7 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 				}
 				for cpuID, cpuUsage := range usagePerCPU {
 					ch <- prometheus.MustNewConstMetric(collector.cpuacctUsagePerCPUMetric,
-						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))                       
+						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))                      
 				}
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()

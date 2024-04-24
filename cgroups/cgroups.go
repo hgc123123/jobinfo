@@ -37,7 +37,6 @@ func LoadCgroups(specPath string, cgroupsRootPath string) (Cgroups, error) {
 	var cgroups Cgroups
 	// Find and open the cgroup file for the process
 	cgroupsPath := filepath.Clean(specPath)
-        //fmt.Println("Hu test ...............%v",cgroupsPath)
 	cgroupsFile, err := os.Open(cgroupsPath)
 	if err != nil {
 		return cgroups, err
