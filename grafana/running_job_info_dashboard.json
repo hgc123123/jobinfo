@@ -40,7 +40,7 @@
       }
     ]
   },
-  "description": "Metrics collected by the cgroups_exporter.",
+  "description": "Metrics collected by the jobinfo.",
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
@@ -543,7 +543,7 @@
     ]
   },
   "timezone": "",
-  "title": "Slurm Cgroups",
-  "uid": "iuCOu9qMz",
+  "title": "jobinfo",
+  "uid": "4247817",
   "version": 22
 }
