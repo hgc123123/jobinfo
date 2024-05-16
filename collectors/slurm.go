@@ -3,11 +3,11 @@ package collectors
 import (
 	"regexp"
 	"strconv"
-	"fmt"
-
+	"strings"
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
 	"github.com/prometheus/client_golang/prometheus"
+	"github.com/hgc123123/jobinfo/script"
 	log "github.com/sirupsen/logrus"
 )
 
@@ -16,9 +16,27 @@ type cgroupsSlurmCollector struct {
 	memoryUsageInBytesMetric *prometheus.Desc
 	cpusetCPUsMetric         *prometheus.Desc
 	cgroupsRootPath          string
+        desc     *prometheus.Desc
+	metric   *prometheus.GaugeVec
+	labelVal []string
 }
 
 func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
+	metric := prometheus.NewGaugeVec(
+		prometheus.GaugeOpts{
+			Name: "my_string_metric",
+			Help: "This is my string metric",
+		},
+		[]string{"user_id", "job_id", "step_id", "task_id", "sbatch_jobname"}, // 这里定义了三个标签
+	)
+
+	// 创建一个描述符
+	desc := prometheus.NewDesc(
+		"my_string_metric_desc",
+		"This is my string metric descriptor",
+		[]string{"user_id", "job_id", "step_id", "task_id", "sbatch_jobname"}, // 这里定义了与指标相关的三个标签
+		nil,
+	)
 	return &cgroupsSlurmCollector{
 		cpuacctUsagePerCPUMetric: prometheus.NewDesc("cgroups_slurm_cpuacct_usage_per_cpu_ns",
 			"Per-nanosecond usage of each CPU in a cgroup",
@@ -33,6 +51,8 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 			[]string{"user_id", "job_id", "step_id", "task_id", "cpu_id"}, nil,
 		),
 		cgroupsRootPath: cgroupsRootPath,
+		desc: desc,
+		metric: metric,
 	}
 }
 
@@ -45,6 +65,8 @@ func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	*/
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
+	ch <- collector.desc
+
 }
 
 func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
@@ -59,6 +81,11 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 			slurmstepdIds = append(slurmstepdIds, proc.Pid())
 		}
 	}
+	//collector.labelVal="#SBATCH --jobname=huhu"
+	//collector.metric.WithLabelValues(collector.labelVal).Set(123456)
+	//collector.metric.WithLabelValues(collector.labelVal).Collect(ch)
+	// 发送指标
+	//ch <- collector.metric
 	// Filter processes by children of slurmstepd processes
 	for _, ssid := range slurmstepdIds {
 		for _, proc := range procs {
@@ -121,6 +148,15 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 					ch <- prometheus.MustNewConstMetric(collector.cpusetCPUsMetric,
 						prometheus.GaugeValue, float64(1), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))
 				}
+				exec_command := strings.Split(strings.Split(matches[0],"/")[3],"_")[1]
+				final_command := "/var/spool/slurmd/job"+exec_command+"/slurm_script"
+				command_exec_content,err := script.GetContentOfScript(final_command)
+
+
+				collector.labelVal=[]string{user_id, job_id, step_id, task_id, command_exec_content}
+	        		metric := collector.metric.WithLabelValues(collector.labelVal[0],collector.labelVal[1],collector.labelVal[2],collector.labelVal[3],collector.labelVal[4])
+				metric.Set(123)
+				ch <- metric
 			}
 		}
 	}
