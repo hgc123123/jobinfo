@@ -1,13 +1,37 @@
 {
+  "__inputs": [],
+  "__requires": [
+    {
+      "type": "grafana",
+      "id": "grafana",
+      "name": "Grafana",
+      "version": "8.0.1"
+    },
+    {
+      "type": "panel",
+      "id": "graph",
+      "name": "Graph (old)",
+      "version": ""
+    },
+    {
+      "type": "datasource",
+      "id": "prometheus",
+      "name": "Prometheus",
+      "version": "1.0.0"
+    },
+    {
+      "type": "panel",
+      "id": "stat",
+      "name": "Stat",
+      "version": ""
+    }
+  ],
   "annotations": {
     "list": [
       {
         "$$hashKey": "object:886",
         "builtIn": 1,
-        "datasource": {
-          "type": "datasource",
-          "uid": "grafana"
-        },
+        "datasource": "-- Grafana --",
         "enable": true,
         "hide": true,
         "iconColor": "rgba(0, 211, 255, 1)",
@@ -18,18 +42,15 @@
   },
   "description": "Metrics collected by the jobinfo.",
   "editable": true,
-  "fiscalYearStartMonth": 0,
+  "gnetId": null,
   "graphTooltip": 0,
-  "id": 61,
+  "id": null,
+  "iteration": 1625236157484,
   "links": [],
-  "liveNow": false,
   "panels": [
     {
       "collapsed": false,
-      "datasource": {
-        "type": "prometheus",
-        "uid": "e5bb969c-2604-47e3-8ecb-331d0334a686"
-      },
+      "datasource": null,
       "gridPos": {
         "h": 1,
         "w": 24,
@@ -39,15 +60,6 @@
       "id": 14,
       "panels": [],
       "repeat": "node",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "e5bb969c-2604-47e3-8ecb-331d0334a686"
-          },
-          "refId": "A"
-        }
-      ],
       "title": "$node",
       "type": "row"
     },
@@ -56,9 +68,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "uid": "$prom_ds"
-      },
+      "datasource": "$prom_ds",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -98,7 +108,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "8.0.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -109,9 +119,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": {
-            "uid": "$prom_ds"
-          },
           "exemplar": true,
           "expr": "sum by (cpu_id) (rate(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval])/1e+9*100  * on(cpu_id,step_id,task_id,user_id) cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})",
           "format": "time_series",
@@ -122,7 +129,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "CPU Usage",
       "tooltip": {
         "shared": true,
@@ -131,7 +140,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -150,11 +161,14 @@
           "format": "short",
           "label": "",
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -162,9 +176,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "uid": "$prom_ds"
-      },
+      "datasource": "$prom_ds",
       "fieldConfig": {
         "defaults": {
           "links": []
@@ -200,7 +212,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "8.0.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -211,9 +223,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": {
-            "uid": "$prom_ds"
-          },
           "expr": "sum by (job_id) (cgroups_slurm_memory_usage_in_bytes{job_id=\"$job_id\",instance=~\"$node:.*\"}/1e+9)",
           "interval": "",
           "legendFormat": "Job {{ job_id }}",
@@ -221,7 +230,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Memory Usage",
       "tooltip": {
         "shared": true,
@@ -230,7 +241,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -240,17 +253,23 @@
           "format": "short",
           "label": "Memory Used (GB)",
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         },
         {
           "$$hashKey": "object:25683",
           "format": "short",
+          "label": null,
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
@@ -258,9 +277,7 @@
       "bars": false,
       "dashLength": 10,
       "dashes": false,
-      "datasource": {
-        "uid": "$prom_ds"
-      },
+      "datasource": "$prom_ds",
       "description": "",
       "fieldConfig": {
         "defaults": {
@@ -300,7 +317,7 @@
         "alertThreshold": true
       },
       "percentage": false,
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "8.0.1",
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
@@ -311,9 +328,6 @@
       "steppedLine": false,
       "targets": [
         {
-          "datasource": {
-            "uid": "$prom_ds"
-          },
           "exemplar": true,
           "expr": "sum(rate(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval]) * on(cpu_id,step_id,task_id,user_id) cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})/(count(count by(cpu_id) (cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))*1e9)*100",
           "format": "time_series",
@@ -324,7 +338,9 @@
         }
       ],
       "thresholds": [],
+      "timeFrom": null,
       "timeRegions": [],
+      "timeShift": null,
       "title": "Total CPU Usage",
       "tooltip": {
         "shared": true,
@@ -333,7 +349,9 @@
       },
       "type": "graph",
       "xaxis": {
+        "buckets": null,
         "mode": "time",
+        "name": null,
         "show": true,
         "values": []
       },
@@ -352,17 +370,19 @@
           "format": "short",
           "label": "",
           "logBase": 1,
+          "max": null,
+          "min": null,
           "show": true
         }
       ],
       "yaxis": {
-        "align": false
+        "align": false,
+        "alignLevel": null
       }
     },
     {
-      "datasource": {
-        "uid": "$prom_ds"
-      },
+      "cacheTimeout": null,
+      "datasource": "$prom_ds",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -390,6 +410,7 @@
         "y": 9
       },
       "id": 16,
+      "interval": null,
       "links": [],
       "maxDataPoints": 100,
       "options": {
@@ -405,15 +426,11 @@
           "values": false
         },
         "text": {},
-        "textMode": "auto",
-        "wideLayout": true
+        "textMode": "auto"
       },
-      "pluginVersion": "10.2.2",
+      "pluginVersion": "8.0.1",
       "targets": [
         {
-          "datasource": {
-            "uid": "$prom_ds"
-          },
           "expr": "count(max by (cpu_id) (cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))",
           "hide": false,
           "interval": "",
@@ -421,134 +438,26 @@
           "refId": "A"
         }
       ],
+      "timeFrom": null,
+      "timeShift": null,
       "title": "Number of Allocated CPUs",
       "type": "stat"
-    },
-    {
-      "collapsed": false,
-      "gridPos": {
-        "h": 1,
-        "w": 24,
-        "x": 0,
-        "y": 17
-      },
-      "id": 20,
-      "panels": [],
-      "title": "Script",
-      "type": "row"
-    },
-    {
-      "datasource": {
-        "type": "prometheus",
-        "uid": "$prom_ds"
-      },
-      "fieldConfig": {
-        "defaults": {
-          "color": {
-            "fixedColor": "green",
-            "mode": "fixed"
-          },
-          "custom": {
-            "align": "auto",
-            "cellOptions": {
-              "type": "auto"
-            },
-            "inspect": false
-          },
-          "mappings": [],
-          "thresholds": {
-            "mode": "absolute",
-            "steps": [
-              {
-                "color": "#299c46",
-                "value": null
-              }
-            ]
-          },
-          "unit": "none"
-        },
-        "overrides": []
-      },
-      "gridPos": {
-        "h": 8,
-        "w": 12,
-        "x": 0,
-        "y": 18
-      },
-      "id": 18,
-      "links": [],
-      "maxDataPoints": 100,
-      "options": {
-        "cellHeight": "sm",
-        "footer": {
-          "countRows": false,
-          "fields": "",
-          "reducer": [
-            "sum"
-          ],
-          "show": false
-        },
-        "showHeader": false
-      },
-      "pluginVersion": "10.2.2",
-      "targets": [
-        {
-          "datasource": {
-            "type": "prometheus",
-            "uid": "$prom_ds"
-          },
-          "disableTextWrap": false,
-          "editorMode": "builder",
-          "exemplar": false,
-          "expr": "running_job_script{job_id=\"$job_id\",instance=~\"$node:.*\"}",
-          "format": "table",
-          "fullMetaSearch": false,
-          "hide": false,
-          "includeNullMetadata": true,
-          "instant": true,
-          "legendFormat": "",
-          "range": false,
-          "refId": "A",
-          "useBackend": false
-        }
-      ],
-      "title": "Running job Script",
-      "transformations": [
-        {
-          "id": "reduce",
-          "options": {
-            "includeTimeField": false,
-            "mode": "reduceFields",
-            "reducers": [
-              "last"
-            ]
-          }
-        },
-        {
-          "id": "filterFieldsByName",
-          "options": {
-            "include": {
-              "names": [
-                "sbatch_jobname"
-              ]
-            }
-          }
-        }
-      ],
-      "type": "table"
     }
   ],
-  "refresh": "",
-  "schemaVersion": 38,
+  "refresh": false,
+  "schemaVersion": 30,
+  "style": "dark",
   "tags": [],
   "templating": {
     "list": [
       {
         "current": {
           "selected": false,
-          "text": "NYU",
-          "value": "e5bb969c-2604-47e3-8ecb-331d0334a686"
+          "text": "Thanos",
+          "value": "Thanos"
         },
+        "description": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Datasource",
@@ -562,15 +471,12 @@
         "type": "datasource"
       },
       {
-        "current": {
-          "selected": true,
-          "text": "394696",
-          "value": "394696"
-        },
-        "datasource": {
-          "uid": "$prom_ds"
-        },
+        "allValue": null,
+        "current": {},
+        "datasource": "$prom_ds",
         "definition": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns, job_id)",
+        "description": null,
+        "error": null,
         "hide": 0,
         "includeAll": false,
         "label": "Job ID",
@@ -591,15 +497,12 @@
         "useTags": false
       },
       {
-        "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
-        },
-        "datasource": {
-          "uid": "$prom_ds"
-        },
+        "allValue": null,
+        "current": {},
+        "datasource": "$prom_ds",
         "definition": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\"}, instance)",
+        "description": null,
+        "error": null,
         "hide": 2,
         "includeAll": true,
         "label": "Node",
@@ -642,6 +545,5 @@
   "timezone": "",
   "title": "jobinfo",
   "uid": "4247817",
-  "version": 1,
-  "weekStart": ""
+  "version": 22
 }

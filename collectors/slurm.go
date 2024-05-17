@@ -24,16 +24,16 @@ type cgroupsSlurmCollector struct {
 func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 	metric := prometheus.NewGaugeVec(
 		prometheus.GaugeOpts{
-			Name: "my_string_metric",
-			Help: "This is my string metric",
+			Name: "running_job_script",
+			Help: "This is running job script",
 		},
 		[]string{"user_id", "job_id", "step_id", "task_id", "sbatch_jobname"}, // 这里定义了三个标签
 	)
 
 	// 创建一个描述符
 	desc := prometheus.NewDesc(
-		"my_string_metric_desc",
-		"This is my string metric descriptor",
+		"running_job_script_desc",
+		"This is running job script descripter",
 		[]string{"user_id", "job_id", "step_id", "task_id", "sbatch_jobname"}, // 这里定义了与指标相关的三个标签
 		nil,
 	)

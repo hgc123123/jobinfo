@@ -2,7 +2,6 @@ package script
 
 import (
 	"io/ioutil"
-	"strings"
 )
 
 
@@ -12,6 +11,5 @@ func GetContentOfScript(name string) (string,error) {
 	if err != nil{
 		return "0",err
 	}
-	newScript := strings.Replace(string(data),"\n","<br>",-1)
-	return newScript,nil
+	return string(data),nil
 }
