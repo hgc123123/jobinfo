@@ -20,7 +20,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 61,
+  "id": 64,
   "links": [],
   "liveNow": false,
   "panels": [
@@ -467,7 +467,20 @@
           },
           "unit": "none"
         },
-        "overrides": []
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "sbatch_jobname"
+            },
+            "properties": [
+              {
+                "id": "custom.inspect",
+                "value": true
+              }
+            ]
+          }
+        ]
       },
       "gridPos": {
         "h": 8,
@@ -563,9 +576,9 @@
       },
       {
         "current": {
-          "selected": true,
-          "text": "394696",
-          "value": "394696"
+          "selected": false,
+          "text": "395393",
+          "value": "395393"
         },
         "datasource": {
           "uid": "$prom_ds"
@@ -593,8 +606,12 @@
       {
         "current": {
           "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "uid": "$prom_ds"
