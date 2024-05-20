@@ -533,7 +533,7 @@
             "includeTimeField": false,
             "mode": "reduceFields",
             "reducers": [
-              "last"
+              "first"
             ]
           }
         },
@@ -576,9 +576,9 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "395393",
-          "value": "395393"
+          "selected": true,
+          "text": "395444",
+          "value": "395444"
         },
         "datasource": {
           "uid": "$prom_ds"
@@ -605,7 +605,7 @@
       },
       {
         "current": {
-          "selected": false,
+          "selected": true,
           "text": [
             "All"
           ],
@@ -659,6 +659,6 @@
   "timezone": "",
   "title": "jobinfo",
   "uid": "4247817",
-  "version": 1,
+  "version": 3,
   "weekStart": ""
 }
