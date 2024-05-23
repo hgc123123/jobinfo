@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
-	"fmt"
+	//"fmt"
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
 	"github.com/prometheus/client_golang/prometheus"
@@ -16,6 +16,7 @@ type cgroupsSlurmCollector struct {
 	cpuacctUsagePerCPUMetric *prometheus.Desc
 	memoryUsageInBytesMetric *prometheus.Desc
 	cpusetCPUsMetric         *prometheus.Desc
+	gpuUsageMetric           *prometheus.Desc
 	cgroupsRootPath          string
         desc     *prometheus.Desc
 	metric   *prometheus.GaugeVec
@@ -51,6 +52,10 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 			"List of CPUs and whether or not they are in the cpuset cgroup",
 			[]string{"user_id", "job_id", "step_id", "task_id", "cpu_id"}, nil,
 		),
+		gpuUsageMetric: prometheus.NewDesc("cgroups_slurm_gpu_usage_per_gpu",
+                        "Usage of each GPU in a cgroup",
+                        []string{"user_id", "job_id", "step_id", "task_id", "gpu_id"}, nil,
+		),
 		cgroupsRootPath: cgroupsRootPath,
 		desc: desc,
 		metric: metric,
@@ -66,6 +71,7 @@ func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	*/
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
+	ch <- collector.gpuUsageMetric
 	ch <- collector.desc
 
 }
@@ -138,7 +144,11 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
                                 if err != nil {
                                         log.Fatalf("unable to read usage per gpu: %v", err)
                                 }
-				fmt.Println("usage of gpu is %v",usagePerGPU)
+				for gpuNumber, gpuUtil := range usagePerGPU {
+                                	//fmt.Printf("usage of %d is %d\n",gpuNumber,gpuUtil)
+					ch <- prometheus.MustNewConstMetric(collector.gpuUsageMetric,
+                                                prometheus.GaugeValue, float64(gpuUtil), user_id, job_id, step_id, task_id, strconv.Itoa(gpuNumber))
+				}
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()
 				if err != nil {
