@@ -4,6 +4,7 @@ import (
 	"regexp"
 	"strconv"
 	"strings"
+	"fmt"
 	ps "github.com/mitchellh/go-ps"
 	cg "github.com/hgc123123/jobinfo/cgroups"
 	"github.com/prometheus/client_golang/prometheus"
@@ -132,6 +133,12 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 					ch <- prometheus.MustNewConstMetric(collector.cpuacctUsagePerCPUMetric,
 						prometheus.GaugeValue, float64(cpuUsage), user_id, job_id, step_id, task_id, strconv.Itoa(cpuID))                      
 				}
+				// usagePerGPU
+                                usagePerGPU, err := cgroups.Devices.GetUsagePerGPU()
+                                if err != nil {
+                                        log.Fatalf("unable to read usage per gpu: %v", err)
+                                }
+				fmt.Println("usage of gpu is %v",usagePerGPU)
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()
 				if err != nil {
