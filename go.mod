@@ -1,6 +1,6 @@
 module github.com/hgc123123/jobinfo
 
-go 1.19.5
+go 1.16
 
 require (
 	github.com/mitchellh/go-ps v1.0.0 // indirect

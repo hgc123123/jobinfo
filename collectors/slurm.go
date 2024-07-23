@@ -17,6 +17,7 @@ type cgroupsSlurmCollector struct {
 	memoryUsageInBytesMetric *prometheus.Desc
 	cpusetCPUsMetric         *prometheus.Desc
 	gpuUsageMetric           *prometheus.Desc
+	vramUsageMetric          *prometheus.Desc
 	cgroupsRootPath          string
         desc     *prometheus.Desc
 	metric   *prometheus.GaugeVec
@@ -56,6 +57,10 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
                         "Usage of each GPU in a cgroup",
                         []string{"user_id", "job_id", "step_id", "task_id", "gpu_id"}, nil,
 		),
+                vramUsageMetric: prometheus.NewDesc("cgroups_slurm_vram_usage_per_gpu",
+                        "Usage of each GPU memory in a cgroup",
+                        []string{"user_id", "job_id", "step_id", "task_id", "gpu_id"}, nil,
+                ),
 		cgroupsRootPath: cgroupsRootPath,
 		desc: desc,
 		metric: metric,
@@ -72,6 +77,7 @@ func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 	ch <- collector.gpuUsageMetric
+	ch <- collector.vramUsageMetric
 	ch <- collector.desc
 
 }
@@ -149,6 +155,16 @@ func (collector *cgroupsSlurmCollector) Collect(ch chan<- prometheus.Metric) {
 					ch <- prometheus.MustNewConstMetric(collector.gpuUsageMetric,
                                                 prometheus.GaugeValue, float64(gpuUtil), user_id, job_id, step_id, task_id, strconv.Itoa(gpuNumber))
 				}
+				// vramUsagePerGPU
+                                vramUsagePerGPU, err := cgroups.Devices.GetVRAMUsagePerGPU()
+                                if err != nil {
+                                        log.Fatalf("unable to read usage per gpu: %v", err)
+                                }
+                                for gpuNumber, vramUtil := range vramUsagePerGPU {
+                                        //fmt.Printf("usage of %d is %d\n",gpuNumber,gpuUtil)
+                                        ch <- prometheus.MustNewConstMetric(collector.vramUsageMetric,
+                                                prometheus.GaugeValue, float64(vramUtil), user_id, job_id, step_id, task_id, strconv.Itoa(gpuNumber))
+                                }
 				// memoryUsageInBytesMetric
 				memoryUsageBytes, err := cgroups.Memory.GetUsageInBytes()
 				if err != nil {
