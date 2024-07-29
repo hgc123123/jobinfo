@@ -5,7 +5,6 @@ import (
 )
 
 
-// GetUsageInBytes returns the current memory in use by the cgroup in bytes
 func GetContentOfScript(name string) (string,error) {
 	data,err := ioutil.ReadFile(name)
 	if err != nil{
