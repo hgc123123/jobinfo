@@ -809,10 +809,10 @@
         "current": {
           "selected": true,
           "text": [
-            "456187"
+            "469092"
           ],
           "value": [
-            "456187"
+            "469092"
           ]
         },
         "datasource": {
@@ -841,9 +841,13 @@
       },
       {
         "current": {
-          "selected": false,
-          "text": "All",
-          "value": "$__all"
+          "selected": true,
+          "text": [
+            "All"
+          ],
+          "value": [
+            "$__all"
+          ]
         },
         "datasource": {
           "uid": "$prom_ds"
@@ -890,7 +894,7 @@
   },
   "timezone": "",
   "title": "jobinfo",
-  "uid": "xxxxxxx",
-  "version": 18,
+  "uid": "xxxxx",
+  "version": 19,
   "weekStart": ""
 }
