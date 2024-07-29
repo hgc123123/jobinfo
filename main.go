@@ -10,8 +10,6 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
-// Official port reserved for this project, see:
-// https://github.com/prometheus/prometheus/wiki/Default-port-allocations
 const officialPort = "9821"
 
 func main() {
