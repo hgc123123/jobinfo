@@ -1,3 +1,6 @@
+# Description
+Jobinfo is developed based on cgroups and can collect real-time data on CPU/GPU utilization, memory, and VRAM usage, as well as the execution script of Slurm-scheduled jobs.
+
 # Install
 
 JobInfo relies golang language, so you need to install golang firstly.
@@ -18,6 +21,8 @@ export PATH=$PATH:$(go env GOPATH)/bin
 
 Install JobInfo
 ```
+git clone https://github.com/hgc123123/jobinfo.git
+cd jobinfo
 make
 ```
 
