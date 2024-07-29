@@ -1,5 +1,5 @@
 TARGET:=jobinfo
-SOURCES:=main.go cgroups/cgroups.go cgroups/cpuset.go cgroups/cpuacct.go cgroups/memory.go collectors/slurm.go
+SOURCES:=main.go metrics/cgroups.go metrics/cpuset.go metrics/cpuacct.go metrics/memory.go collectors/slurm.go
 
 $(TARGET): $(SOURCES)
 	go build -o $@

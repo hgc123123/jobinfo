@@ -6,7 +6,7 @@ import (
 	"strings"
 	//"fmt"
 	ps "github.com/mitchellh/go-ps"
-	cg "github.com/hgc123123/jobinfo/cgroups"
+	cg "github.com/hgc123123/jobinfo/metrics"
 	"github.com/prometheus/client_golang/prometheus"
 	"github.com/hgc123123/jobinfo/script"
 	log "github.com/sirupsen/logrus"
