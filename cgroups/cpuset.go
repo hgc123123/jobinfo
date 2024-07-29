@@ -9,8 +9,6 @@ import (
 
 type cpuset string
 
-// GetCpus returns an array containing valid CPU numbers for this cgroup sorted
-// by CPU index ascending
 func (c cpuset) GetCpus() ([]int, error) {
 	var cpus []int
 	data, err := readFile(string(c), "cpuset.cpus")

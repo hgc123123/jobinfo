@@ -113,7 +113,7 @@
             "uid": "$prom_ds"
           },
           "exemplar": true,
-          "expr": "sum by (cpu_id) (rate(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval])/1e+9*100  * on(cpu_id,step_id,task_id,user_id) cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})",
+          "expr": "sum by (cpu_id) (rate(usage_cpu_each{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval])/1e+9*100  * on(cpu_id,step_id,task_id,user_id) cpuset_all_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -214,7 +214,7 @@
           "datasource": {
             "uid": "$prom_ds"
           },
-          "expr": "sum by (job_id) (cgroups_slurm_memory_usage_in_bytes{job_id=\"$job_id\",instance=~\"$node:.*\"}/1e+9)",
+          "expr": "sum by (job_id) (usage_of_memory{job_id=\"$job_id\",instance=~\"$node:.*\"}/1e+9)",
           "interval": "",
           "legendFormat": "Job {{ job_id }}",
           "refId": "A"
@@ -315,7 +315,7 @@
             "uid": "$prom_ds"
           },
           "exemplar": true,
-          "expr": "sum(rate(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval]) * on(cpu_id,step_id,task_id,user_id) cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})/(count(count by(cpu_id) (cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))*1e9)*100",
+          "expr": "sum(rate(usage_cpu_each{job_id=\"$job_id\",instance=~\"$node:.*\"}[$__rate_interval]) * on(cpu_id,step_id,task_id,user_id) cpuset_all_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"})/(count(count by(cpu_id) (cpuset_all_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))*1e9)*100",
           "format": "time_series",
           "hide": false,
           "interval": "",
@@ -414,7 +414,7 @@
           "datasource": {
             "uid": "$prom_ds"
           },
-          "expr": "count(max by (cpu_id) (cgroups_slurm_cpuset_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))",
+          "expr": "count(max by (cpu_id) (cpuset_all_cpus{job_id=\"$job_id\",instance=~\"$node:.*\"}))",
           "hide": false,
           "interval": "",
           "legendFormat": "Number of Allocated CPUs",
@@ -489,7 +489,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "cgroups_slurm_gpu_usage_per_gpu{job_id=\"$job_id\"}",
+          "expr": "usage_gpu_each{job_id=\"$job_id\"}",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -604,7 +604,7 @@
           "disableTextWrap": false,
           "editorMode": "builder",
           "exemplar": false,
-          "expr": "cgroups_slurm_vram_usage_per_gpu{job_id=\"$job_id\"}",
+          "expr": "vram_usage_gpu_each{job_id=\"$job_id\"}",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -819,7 +819,7 @@
           "type": "prometheus",
           "uid": "e5bb969c-2604-47e3-8ecb-331d0334a686"
         },
-        "definition": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns, job_id)",
+        "definition": "label_values(usage_cpu_each, job_id)",
         "hide": 0,
         "includeAll": true,
         "label": "Job ID",
@@ -827,7 +827,7 @@
         "name": "job_id",
         "options": [],
         "query": {
-          "query": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns, job_id)",
+          "query": "label_values(usage_cpu_each, job_id)",
           "refId": "Thanos-job_id-Variable-Query"
         },
         "refresh": 2,
@@ -848,7 +848,7 @@
         "datasource": {
           "uid": "$prom_ds"
         },
-        "definition": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\"}, instance)",
+        "definition": "label_values(usage_cpu_each{job_id=\"$job_id\"}, instance)",
         "hide": 0,
         "includeAll": true,
         "label": "Node",
@@ -856,7 +856,7 @@
         "name": "node",
         "options": [],
         "query": {
-          "query": "label_values(cgroups_slurm_cpuacct_usage_per_cpu_ns{job_id=\"$job_id\"}, instance)",
+          "query": "label_values(usage_cpu_each{job_id=\"$job_id\"}, instance)",
           "refId": "Thanos-node-Variable-Query"
         },
         "refresh": 2,
@@ -890,7 +890,7 @@
   },
   "timezone": "",
   "title": "jobinfo",
-  "uid": "4247817",
+  "uid": "xxxxxxx",
   "version": 18,
   "weekStart": ""
 }

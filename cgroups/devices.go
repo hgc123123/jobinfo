@@ -11,8 +11,6 @@ import (
 
 type devices string
 
-// GetUsagePerCPU returns the per-nanosecond CPU usage of each CPU indexed from
-// 0
 func (c devices) GetUsagePerGPU() (map[int]int, error) {
         usage := make(map[int]int)
 	data, err := readFile(string(c), "cgroup.procs")
@@ -25,7 +23,6 @@ func (c devices) GetUsagePerGPU() (map[int]int, error) {
 			log.Errorf("unable to convert per-gpu usage to integer: %v", err)
 			return usage, err
 		}
-		//usage = append(usage, usageInt)
                 cmd := exec.Command("sh", "-c", fmt.Sprintf("nvidia-smi pmon -s u -c 1 | grep %d | awk '{print $1}'", procInt))
 
 		output, err := cmd.Output()

@@ -9,8 +9,6 @@ import (
 
 type cpuacct string
 
-// GetUsagePerCPU returns the per-nanosecond CPU usage of each CPU indexed from
-// 0
 func (c cpuacct) GetUsagePerCPU() ([]int, error) {
 	var usage []int
 	data, err := readFile(string(c), "cpuacct.usage_percpu")

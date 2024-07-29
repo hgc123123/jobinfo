@@ -9,7 +9,6 @@ import (
 
 type memory string
 
-// GetUsageInBytes returns the current memory in use by the cgroup in bytes
 func (c memory) GetUsageInBytes() (int, error) {
 	data, err := readFile(string(c), "memory.usage_in_bytes")
 	if err != nil {

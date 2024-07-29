@@ -41,23 +41,23 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 		nil,
 	)
 	return &cgroupsSlurmCollector{
-		cpuacctUsagePerCPUMetric: prometheus.NewDesc("cgroups_slurm_cpuacct_usage_per_cpu_ns",
+		cpuacctUsagePerCPUMetric: prometheus.NewDesc("usage_cpu_each",
 			"Per-nanosecond usage of each CPU in a cgroup",
 			[]string{"user_id", "job_id", "step_id", "task_id", "cpu_id"}, nil,
 		),
-		memoryUsageInBytesMetric: prometheus.NewDesc("cgroups_slurm_memory_usage_in_bytes",
+		memoryUsageInBytesMetric: prometheus.NewDesc("usage_of_memory",
 			"Current memory used by the cgroup in bytes",
 			[]string{"user_id", "job_id", "step_id", "task_id"}, nil,
 		),
-		cpusetCPUsMetric: prometheus.NewDesc("cgroups_slurm_cpuset_cpus",
+		cpusetCPUsMetric: prometheus.NewDesc("cpuset_all_cpus",
 			"List of CPUs and whether or not they are in the cpuset cgroup",
 			[]string{"user_id", "job_id", "step_id", "task_id", "cpu_id"}, nil,
 		),
-		gpuUsageMetric: prometheus.NewDesc("cgroups_slurm_gpu_usage_per_gpu",
+		gpuUsageMetric: prometheus.NewDesc("usage_gpu_each",
                         "Usage of each GPU in a cgroup",
                         []string{"user_id", "job_id", "step_id", "task_id", "gpu_id"}, nil,
 		),
-                vramUsageMetric: prometheus.NewDesc("cgroups_slurm_vram_usage_per_gpu",
+                vramUsageMetric: prometheus.NewDesc("vram_usage_gpu_each",
                         "Usage of each GPU memory in a cgroup",
                         []string{"user_id", "job_id", "step_id", "task_id", "gpu_id"}, nil,
                 ),
@@ -69,11 +69,6 @@ func NewCgroupsSlurmCollector(cgroupsRootPath string) *cgroupsSlurmCollector {
 
 func (collector *cgroupsSlurmCollector) Describe(ch chan<- *prometheus.Desc) {
 	ch <- collector.cpuacctUsagePerCPUMetric
-	/*
-	Desc{fqName: "cgroups_slurm_cpuacct_usage_per_cpu_ns", \
-		help: "Per-nanosecond usage of each CPU in a cgroup", \
-		constLabels: {}, variableLabels: [user_id job_id step_id task_id cpu_id]}
-	*/
 	ch <- collector.memoryUsageInBytesMetric
 	ch <- collector.cpusetCPUsMetric
 	ch <- collector.gpuUsageMetric
