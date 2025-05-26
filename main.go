@@ -23,7 +23,7 @@ func main() {
 		return
 	}
 	log.Printf("serving cgroups from hierarchy root %s", *cgroupsRootPathPtr)
-	// Create and register our cgroups collector
+	// 创建和注册Collector 
 	var cgroupsCollector prometheus.Collector
 	if *methodPtr == "slurm" {
 		cgroupsCollector = collectors.NewCgroupsSlurmCollector(*cgroupsRootPathPtr)
@@ -31,7 +31,7 @@ func main() {
 		log.Fatalf("invalid method %s", *methodPtr)
 	}
 	prometheus.MustRegister(cgroupsCollector)
-	// Serve Prometheus HTTP requests
+	// Prometheus的HTTP requests
 	log.Printf("listening on port %s", *portPtr)
 	http.Handle("/metrics", promhttp.Handler())
 	log.Fatal(http.ListenAndServe(":"+(*portPtr), nil))
