@@ -16,7 +16,7 @@
       }
     ]
   },
-  "description": "Metrics collected by the jobinfo.",
+  "description": "Metrics collected by the jobinfo",
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
