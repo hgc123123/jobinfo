@@ -56,6 +56,7 @@ func (c devices) GetUsagePerGPU() (map[int]int, error) {
 	}
 	return usage, nil 
 }
+
 func (c devices) GetVRAMUsagePerGPU() (map[int]int, error) {
         usage := make(map[int]int)
         data, err := readFile(string(c), "cgroup.procs")
@@ -81,7 +82,7 @@ func (c devices) GetVRAMUsagePerGPU() (map[int]int, error) {
                 for _, line := range lines {
                         if len(strings.TrimSpace(line)) > 0 {
                                 gpuNumber, _ := strconv.Atoi(strings.TrimSpace(line))
-                                cmd1 := exec.Command("sh", "-c", fmt.Sprintf("nvidia-smi pmon -s u -c 1 | grep %d | awk '{print $5}'", procInt))
+                                cmd1 := exec.Command("sh", "-c", fmt.Sprintf("nvidia-smi --query-compute-apps=pid,used_memory --format=csv | grep %d | awk '{print $2}'", procInt))
 
                                 output1, err := cmd1.Output()
                                 if err != nil {
@@ -100,5 +101,5 @@ func (c devices) GetVRAMUsagePerGPU() (map[int]int, error) {
                         }
                 }
         }
-        return usage, nil 
+        return usage, nil
 }

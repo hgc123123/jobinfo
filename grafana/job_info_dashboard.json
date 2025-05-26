@@ -564,7 +564,7 @@
         "y": 17
       },
       "hiddenSeries": false,
-      "id": 22,
+      "id": 23,
       "interval": "",
       "legend": {
         "alignAsTable": false,
@@ -602,9 +602,9 @@
             "uid": "$prom_ds"
           },
           "disableTextWrap": false,
-          "editorMode": "builder",
+          "editorMode": "code",
           "exemplar": false,
-          "expr": "vram_usage_gpu_each{job_id=\"$job_id\"}",
+          "expr": "vram_usage_gpu_each{job_id=\"$job_id\"}/1024",
           "format": "time_series",
           "fullMetaSearch": false,
           "hide": false,
@@ -635,10 +635,10 @@
       "yaxes": [
         {
           "$$hashKey": "object:7840",
-          "format": "percent",
-          "label": "Percent Usage",
+          "format": "none",
+          "label": "GPU VRAM Used (GB)",
           "logBase": 1,
-          "max": "100",
+          "max": "90",
           "min": "0",
           "show": true
         },
@@ -653,7 +653,8 @@
       "yaxis": {
         "align": false
       }
-    },
+    }, 
+
     {
       "collapsed": false,
       "gridPos": {
