@@ -95,7 +95,7 @@ func (c devices) GetVRAMUsagePerGPU() (map[int]int, error) {
                                         if len(strings.TrimSpace(line1)) > 0 {
                                                 gpuUtil, _ := strconv.Atoi(strings.TrimSpace(line1))
                                                 usage[gpuNumber] = gpuUtil
-                                                //fmt.Printf("%d is %d years old\n", gpuNumber, gpuUtil)
+                                                //fmt.Printf("%d is %d year old\n", gpuNumber, gpuUtil)
                                         }
                                 }
                         }
